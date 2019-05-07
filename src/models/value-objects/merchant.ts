@@ -1,3 +1,3 @@
 export class Merchant {
-    constructor(public readonly value: string) {}
+    constructor(public readonly value: string | undefined) {}
 }

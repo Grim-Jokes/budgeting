@@ -1,6 +1,6 @@
 export class Amount {
     private _value: number;
-    public constructor(value: string) {
+    public constructor(value: string) {        
         this._value = Number.parseFloat(value);
     }
 

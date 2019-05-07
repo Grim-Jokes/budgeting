@@ -9,4 +9,4 @@ export var app =  express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.use('/api/v1/transactions', router);
+app.use('/api/v1/transaction_emails', router);
