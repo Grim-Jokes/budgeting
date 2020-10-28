@@ -17,6 +17,7 @@ interface TransactionDTO {
 
 function mapTransactionEntryToModel(data: TransactionDTO, merchant: Merchant): Transaction {
     return new Transaction({
+        id: data.id,
         merchant,
         date: new TransactionDate(data.date),
         amount: new Amount(data.amount),

@@ -11,6 +11,7 @@
   "dependencies": {
     "body-parser": "^1.19.0",
     "cookie-parser": "~1.3.5",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "module-alias": "^2.2.2",
     "node-pg-migrate": "^5.8.1",
@@ -23,6 +24,7 @@
     "@types/jest": "^24.0.12",
     "@types/node": "^12.0.0",
     "@types/pg": "^7.14.5",
+    "httptypes": "file:../httpTypes",
     "jest": "^24.8.0",
     "nodemon": "^2.0.6",
     "ts-jest": "^24.0.2",
