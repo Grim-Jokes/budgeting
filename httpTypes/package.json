@@ -1,0 +1,11 @@
+{
+  "name": "httptypes",
+  "version": "1.0.0",
+  "description": "Shared types between the client and server",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
