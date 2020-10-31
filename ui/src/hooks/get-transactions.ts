@@ -3,7 +3,7 @@ import { useContext, useEffect, useState } from 'react';
 import { ListTransactionsResponse } from 'httptypes';
 import { RequestContext } from '../components/providers/request';
 
-export function useGetTransactions() {
+export function useGetTransactions(args = []) {
     let request = useContext(RequestContext);
 
     let [transactions, setTransactions] = useState<ListTransactionsResponse[]>([]);
@@ -15,7 +15,7 @@ export function useGetTransactions() {
         }
 
         request.get<ListTransactionsResponse[]>('transactions').then(saveTransactions);
-    });
+    }, [request]);
 
     return transactions;
 }

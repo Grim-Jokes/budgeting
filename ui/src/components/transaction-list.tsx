@@ -1,19 +1,33 @@
 import { ListTransactionsResponse } from 'httptypes';
 import React from 'react';
+import { Column, DataGrid } from './shared/DataGrid';
+
 import { useGetTransactions } from "../hooks/get-transactions"
 
 export function TransactionList() {
 
     const transactions = useGetTransactions();
+    const columns: Column[] = [
+        {
+            field: "id",
+            headerName: "ID"
+        },
+        {
+            field: "merchant",
+            width: 400,
+        },
+        {
+            field: "amount",
+            valueFormatter: (params) => {
+                return `$${params.value}`;
+            }
+        },
+        {
+            field: "date",
+        }
+    ]
 
     return (
-        <div role="transaction-list">
-            <ul>
-                {transactions.map((entry: ListTransactionsResponse) => {
-                    return (<li>
-                        {entry.amount} - {entry.merchant} - {entry.date}
-                    </li>);
-                })}
-            </ul>
-        </div>)
+        <DataGrid rows={transactions} columns={columns} />
+    );
 }
