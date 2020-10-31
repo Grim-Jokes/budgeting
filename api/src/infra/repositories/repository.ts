@@ -1,7 +1,7 @@
 import { PoolClient, QueryResult } from "pg";
 
 import { connect } from "../postgress";
-import { IDisposable } from "../cleanup";
+import { addDisposable, IDisposable } from "../cleanup";
 
 type RepoConstructor<T> = new (...args: any[]) => T;
 
@@ -49,11 +49,16 @@ export class Repository<R = { id: number }> implements IDisposable {
         this.client.release();
     }
 
-    public static async getRepo<T>(...args: any[]): Promise<T> {
+    public static async getRepo<T extends IDisposable>(...args: any[]): Promise<T> {
         const client = await connect();
 
         // @ts-ignore
-        let ctr: RepoConstructor<T> = this;
-        return new ctr(client, ...args);
+        const ctr: RepoConstructor<T> = this;
+
+        let repo: T = new ctr(client, ...args);
+
+        addDisposable(repo);
+
+        return repo;
     }
 }

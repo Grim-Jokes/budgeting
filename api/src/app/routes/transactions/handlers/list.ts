@@ -41,5 +41,7 @@ export async function ListTransactions(req: Request, res: Response, next: NextFu
     next();
   } catch (err) {
     next(err);
+  } finally {
+    
   }
 }
