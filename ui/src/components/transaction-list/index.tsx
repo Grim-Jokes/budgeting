@@ -58,7 +58,7 @@ export function TransactionList() {
         <TableContainer style={{ width: '50%', 'margin': 'auto' }} className={style.tableContainer}>
             <Table>
                 <TableHead>
-                    <TableRow>
+                    <TableRow className={style.tableHeaderRow}>
                         {columns.map((item) => <TableCell>{item}</TableCell>)}
                     </TableRow>
                 </TableHead>
