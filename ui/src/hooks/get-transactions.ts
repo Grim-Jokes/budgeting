@@ -1,8 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 import { ListTransactionsResponse } from 'httptypes';
+import { RequestContext } from '../components/providers/request';
 
 export function useGetTransactions() {
+    let request = useContext(RequestContext);
+
     let [transactions, setTransactions] = useState<ListTransactionsResponse[]>([]);
 
 
@@ -11,10 +14,7 @@ export function useGetTransactions() {
             setTransactions(value);
         }
 
-        fetch('http://localhost:3000/api/v1/transactions').then((response: Response) => {
-            console.log(response);
-            return response.json()
-        }).then(saveTransactions);
+        request.get<ListTransactionsResponse[]>('transactions').then(saveTransactions);
     });
 
     return transactions;
