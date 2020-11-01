@@ -30,13 +30,35 @@ export class Request {
     }
 
     public get<R>(segment: URISegment): Promise<R> {
+        const url = this.getUrl(segment);
+        return fetch(url, {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+        }).then((result) => result.json())
+    }
+
+    public post<W, R>(segment: URISegment, body: W): Promise<R> {
+        const url = this.getUrl(segment);
+        return fetch(url, {
+            method: "POST",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(body)
+        }).then((result) => result.json())
+    }
+
+    private getUrl(segment: URISegment) {
         let url = this.urls.get(segment);
         if (url == null) {
             url = `${this.url}/${segment}`;
             this.urls.set(segment, url);
         }
 
-        return fetch(url).then((result) => result.json())
+        return url;
     }
 }
 

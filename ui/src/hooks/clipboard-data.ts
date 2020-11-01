@@ -1,15 +1,15 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
-interface PastedData {
+export interface PastedData {
     amount: number;
     merchant: string;
     date: string;
 }
 
-export function useClipboardData(): PastedData[] | void {
-    let data = useRef<PastedData[]>();
-    let [, updateState] = useState({});
-    const forceUpdate = useCallback(() => updateState({}), []);
+type ClearFn = () => void;
+
+export function useClipboardData(): [PastedData[], ClearFn] {
+    let [data, setData] = useState<PastedData[]>([]);
 
     useEffect(() => {
         function handlePaste(ev: ClipboardEvent) {
@@ -17,7 +17,7 @@ export function useClipboardData(): PastedData[] | void {
             let rows = text?.trim().split('\n');
 
 
-            data.current = rows?.map((row) => {
+            let mappedRows: PastedData[] | void = rows?.map((row) => {
                 let cols = row.split(',');
                 if (cols.length === 1) {
                     cols = cols[0].split('\t');
@@ -27,7 +27,7 @@ export function useClipboardData(): PastedData[] | void {
                 if (Number.isNaN(num)) {
                     num = Number.parseFloat(cols[5]);
                 } else {
-                    if (num > 0)  {
+                    if (num > 0) {
                         num *= -1
                     }
                 }
@@ -38,14 +38,20 @@ export function useClipboardData(): PastedData[] | void {
                 }
 
             });
-            forceUpdate();
+
+            setData(mappedRows || []);
         }
+
         document.addEventListener("paste", handlePaste);
 
         return () => {
             document.removeEventListener("paste", handlePaste);
         }
-    }, [data, forceUpdate]);
+    }, [data]);
 
-    return data.current;
+    function clear() {
+        setData([]);
+    }
+
+    return [data, clear];
 }

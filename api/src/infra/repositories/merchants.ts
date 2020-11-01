@@ -48,28 +48,31 @@ export class Merchants extends Repository<MerchantDTO> implements MerchantsRepos
 
         if (result) {
             return mapMapEntryToEntity(result);
-
-
         }
     }
 
     async save(merchant: Merchant): Promise<Merchant> {
-        const insertedId = await super.insertModel(`
+        try {
+            const insertedId = await super.insertModel(`
         INSERT INTO public.merchant(
-            name
+            "name"
         )
         VALUES (
-            $1
+            $1::text
         )
         RETURNING id;`,
-            [merchant.name.value]);
+                [merchant.name.value]);
 
-        const ret = new Merchant({
-            name: merchant.name,
-            id: insertedId
-        });
+            const ret = new Merchant({
+                name: merchant.name,
+                id: insertedId
+            });
 
-        return ret;
+            return ret;
+        }
+        catch (err) {
+            throw err;
+        }
     }
 
 }

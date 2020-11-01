@@ -8,7 +8,6 @@ export function useGetTransactions() {
 
     let [transactions, setTransactions] = useState<ListTransactionsResponse[]>([]);
 
-
     useEffect(() => {
         function saveTransactions(value: ListTransactionsResponse[]) {
             setTransactions(value);

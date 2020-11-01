@@ -21,7 +21,7 @@ export class Repository<R = { id: number }> implements IDisposable {
             throw new Error("Insertion failed")
         }
 
-        return result.rows[0];
+        return result.rows[0].id;
     }
 
     protected async listModels(query: string): Promise<QueryResult<R>> {

@@ -3,13 +3,10 @@ import { Request } from 'express';
 import { Transaction, Merchant } from "@src/models/entities";
 import { MerchantsRepository, TransactionRepository } from "@src/models/repositories";
 import { Amount, MerchantName, TransactionDate } from '@src/models/value-objects';
+import { CreateTransactionRequest } from 'httptypes';
 
-
-interface InsertTransactionRequest {
-    merchantId?: number;
-    merchant?: string;
-    amount: string;
-    transactionDate: string | number
+export interface InsertStatus {
+    [index: string]: Error
 }
 
 export class TransactionService {
@@ -18,9 +15,42 @@ export class TransactionService {
         private merchantRepo: MerchantsRepository,
     ) { }
 
-    public async saveTransaction(req: Request): Promise<Transaction> {
-        const { merchantId, merchant: merchantName, amount, transactionDate } = req.body as InsertTransactionRequest;
+    public async saveTransaction(data: CreateTransactionRequest): Promise<Transaction> {
+        const merchant: Merchant = await this.handleMerchant(data);
 
+        if (data.amount == null) {
+            throw new Error("Amount cannot be undefined");
+        }
+
+        if (data.date == null) {
+            throw new Error("Transaction date cannot be undefined");
+        }
+
+        const transaction = new Transaction({
+            merchant,
+            amount: new Amount(data.amount),
+            date: new TransactionDate(data.date)
+        });
+
+        return this.transactionRepo.save(transaction);
+    }
+
+    public async saveTransactions(data: CreateTransactionRequest[], insertErrors: InsertStatus): Promise<Transaction[]> {
+        let transactions: Transaction[] = [];
+
+        for (let i = 0; i < data.length; i++) {
+            try {
+                transactions.push(await this.saveTransaction(data[i]));
+            } catch (err) {
+                insertErrors[i] = err.message
+            }
+        }
+
+        return transactions;
+    }
+
+    private async handleMerchant(body: CreateTransactionRequest) {
+        const { merchantId, merchant: merchantName } = body;
         let merchant: Merchant | void;
         if (merchantId) {
             merchant = await this.merchantRepo.get(merchantId);
@@ -31,17 +61,11 @@ export class TransactionService {
                     name: new MerchantName(merchantName)
                 }));
             }
-        } else {
+        }
+        else {
             throw new Error("Merchant is not set")
         }
-
-        const transaction = new Transaction({
-            merchant,
-            amount: new Amount(amount),
-            date: new TransactionDate(transactionDate)
-        })
-
-        return this.transactionRepo.save(transaction);
+        return merchant;
     }
 
     public async viewTransactions(_req: Request) {

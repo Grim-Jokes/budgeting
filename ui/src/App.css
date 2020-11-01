@@ -36,3 +36,12 @@
     transform: rotate(360deg);
   }
 }
+
+.nav > ul {
+  width: 50px;
+  margin: auto;
+}
+
+.content {
+  width: calc(100% - 49px);
+}
