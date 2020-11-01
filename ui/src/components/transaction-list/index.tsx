@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, TableContainer, TableHead, TableRow, TableCell, TableBody, TableFooter, Button } from '@material-ui/core';
+import { Table, TableContainer, TableRow, TableCell, TableBody, TableFooter, Button } from '@material-ui/core';
 
 import { CreateTransactionResponse, ListTransactionsResponse } from 'httptypes';
 

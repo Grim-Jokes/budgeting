@@ -1,5 +1,3 @@
-import { createJSDocThisTag } from "typescript";
-
 interface ConnectionParams {
     apiHost: string,
     apiPort: string
