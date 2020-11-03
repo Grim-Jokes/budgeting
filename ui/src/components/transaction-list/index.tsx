@@ -52,7 +52,7 @@ export function TransactionList() {
 
     let transactions: ListTransactionsResponse[] | CreateTransactionResponse[] = useGetTransactions();
 
-    let [pastedData, clearPastedData] = useClipboardData();
+    let [pastedData] = useClipboardData();
 
     let newData: (CreateTransactionResponse | PastedData)[] = [];
 
@@ -91,7 +91,6 @@ export function TransactionList() {
                 <div>
                     <Button variant="contained" color="primary" onClick={() => {
                         onClick(pastedData);
-                        clearPastedData()
                     }}>Save</Button>
                 </div>
                 <Table>

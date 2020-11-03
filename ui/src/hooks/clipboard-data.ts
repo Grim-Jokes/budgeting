@@ -15,9 +15,13 @@ export function useClipboardData(): [PastedData[], ClearFn] {
         function handlePaste(ev: ClipboardEvent) {
             let text = ev.clipboardData?.getData("text");
             let rows = text?.trim().split('\n');
+            
 
 
             let mappedRows: PastedData[] | void = rows?.map((row) => {
+                // TODO: Move this logic over to the API at some point
+                // Strip away the confirmation info to avoid duplicating merchants. 
+                row = row.replace(/Confirmation #[\d]+/, '').trim();
                 let cols = row.split(',');
                 if (cols.length === 1) {
                     cols = cols[0].split('\t');
@@ -33,7 +37,7 @@ export function useClipboardData(): [PastedData[], ClearFn] {
                 }
                 return {
                     amount: num,
-                    merchant: cols[2],
+                    merchant: cols[2].replace(/ {2,}/g, ' '),
                     date: cols[1],
                 }
 
