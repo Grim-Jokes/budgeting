@@ -76,9 +76,7 @@ export function ExpensesDoughnut(props: Props) {
                 elements: {
                     arc: {
                         borderWidth: 0.1,
-                        backgroundColor: 'blie',
                         borderColor: 'black',
-                        borderAlign: 'left',
                     }
                 },
             }}

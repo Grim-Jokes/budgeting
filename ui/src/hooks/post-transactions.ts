@@ -3,7 +3,7 @@ import { useContext, useState } from 'react';
 import { BulkCreateTransactionResponse, CreateTransactionRequest } from 'httptypes';
 import { RequestContext } from '../components/providers/request';
 
-export function usePostTransactions(): [BulkCreateTransactionResponse, (body: CreateTransactionRequest[]) => Promise<void>] {
+export function usePostTransactions(): [BulkCreateTransactionResponse, (body: CreateTransactionRequest[]) => Promise<void>, () => void] {
     let request = useContext(RequestContext);
     const [addedTrans, setAddedTrans] = useState<BulkCreateTransactionResponse>({ transactions: [], errors: [] });
 
@@ -16,5 +16,9 @@ export function usePostTransactions(): [BulkCreateTransactionResponse, (body: Cr
         }
     };
 
-    return [addedTrans, post]
+    function cleanUp() {
+        setAddedTrans({ transactions: [], errors: [] });
+    }
+
+    return [addedTrans, post, cleanUp]
 }

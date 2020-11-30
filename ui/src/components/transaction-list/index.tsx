@@ -1,14 +1,13 @@
 import React from 'react';
-import { Table, TableContainer, TableRow, TableCell, TableBody, TableFooter, Button } from '@material-ui/core';
+import { Table, TableContainer, TableRow, TableCell, TableBody, TableFooter } from '@material-ui/core';
 
 import { CreateTransactionResponse, ListTransactionsResponse } from 'httptypes';
 
-import { useGetTransactions } from "../../hooks/get-transactions"
-import { useClipboardData, PastedData } from '../../hooks/clipboard-data';
-import { usePostTransactions } from '../../hooks/post-transactions';
+import { PastedData } from '../../hooks/clipboard-data';
 import { Col, TransactionHeader } from './transaction-list-header';
 
 import style from './transaction-list.module.css';
+import { ParsedTransaction } from '../../services/parsers';
 
 const columns: Col[] = ["#", 'merchant', 'amount', 'date'];
 
@@ -24,7 +23,18 @@ function transactionToTableCell(item: Transaction | PastedData, index: number) {
         <TableRow>
             {columns.map((col: Col) => {
                 if (col === "amount") {
-                    return <TableCell> {`$${item[col]}`}</TableCell>
+                    let className = '';
+                    if (item[col] > 0) {
+                        className = 'income'
+                    } else if (item[col] < 0) {
+                        className = 'expense'
+                    }
+
+                    return <TableCell>
+                        <span className={className}>
+                            {`$${item[col]}`}
+                        </span>
+                    </TableCell>
                 }
 
                 switch (col) {
@@ -48,35 +58,20 @@ function transactionToTableCell(item: Transaction | PastedData, index: number) {
     );
 }
 
-export function TransactionList() {
 
-    let transactions: ListTransactionsResponse[] | CreateTransactionResponse[] = useGetTransactions();
+export interface Props {
+    transactions?: ListTransactionsResponse[] | CreateTransactionResponse[] | ParsedTransaction[];
+}
 
-    let [pastedData] = useClipboardData();
+export function TransactionList(props: Props) {
 
-    let newData: (CreateTransactionResponse | PastedData)[] = [];
-
-    const [addedTrans, onClick] = usePostTransactions();
-
-    if (addedTrans.transactions.length > 0) {
-        newData = addedTrans.transactions;
-        console.log(newData);
-    }
-    else if (pastedData.length > 0) {
-        newData = pastedData;
-    }
-
-    const trans = [
-        ...transactions,
-        ...newData,
-    ]
-
-    console.log("TRANS", trans);
+    let transactions = props.transactions || [];
 
     let sum = {
         amount: 0
     }
-    sum = trans.reduce((prev, curr) => {
+
+    sum = transactions.reduce((prev, curr) => {
         return {
             ...curr,
             merchant: 'total',
@@ -86,21 +81,15 @@ export function TransactionList() {
 
     return (
         <>
-
             <TableContainer className={style.tableContainer}>
-                <div>
-                    <Button variant="contained" color="primary" onClick={() => {
-                        onClick(pastedData);
-                    }}>Save</Button>
-                </div>
                 <Table>
                     <TransactionHeader className={style.tableHeaderRow}>
                         {columns}
                     </TransactionHeader>
-                    <TableBody>
-                        {trans.map(transactionToTableCell)}
+                    <TableBody className={style.tableBody}>
+                        {transactions.map(transactionToTableCell)}
                     </TableBody>
-                    <TableFooter>
+                    <TableFooter className={style.tableBody}>
                         <TableRow>
                             <TableCell />
                             <TableCell />

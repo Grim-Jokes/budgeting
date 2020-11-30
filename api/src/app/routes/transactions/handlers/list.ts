@@ -7,14 +7,16 @@ import { serializeResponse } from '@src/app/serializers/transaction';
 import { Transaction } from '@src/models/entities';
 
 export async function ListTransactions(req: Request, res: Response, next: NextFunction) {
-  const service = new TransactionService(
-    await Transactions.getRepo(
-      await Merchants.getRepo(),
-    ),
-    await Merchants.getRepo(),
-  );
-
   try {
+    console.log("Listing transactions");
+    const service = new TransactionService(
+      await Transactions.getRepo(
+        await Merchants.getRepo(),
+      ),
+      await Merchants.getRepo(),
+    );
+
+
     const data: Transaction[] = await service.viewTransactions(req);
 
     res.status(200);
@@ -25,8 +27,9 @@ export async function ListTransactions(req: Request, res: Response, next: NextFu
     );
     next();
   } catch (err) {
+    console.error(err.message);
     next(err);
   } finally {
-    
+
   }
 }

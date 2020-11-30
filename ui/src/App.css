@@ -1,6 +1,5 @@
 body {
-  background: #1c2d1d;
-
+  font-size: 10pt;
 }
 
 @keyframes App-logo-spin {
@@ -15,7 +14,6 @@ body {
 .nav {
   width: 50px;
   height: 100%;
-  background: #243525;
 }
 .nav > ul {
   margin: auto;
@@ -26,5 +24,17 @@ body {
 }
 
 .MuiSvgIcon-root {
-  color:rgba(255, 255, 255, 0.4);
-  }
+  color:rgba(255, 255, 255, 0.6);
+}
+
+.MuiSvgIcon-root:hover {
+  color:rgba(255, 255, 255, 0.9);
+}
+
+.income { 
+  color: #30A000;
+}
+
+.expense {
+  color: #A03000;
+}

@@ -3,14 +3,35 @@ version: "3.3"
 services:
     api:
       build: 
-        context: ./api
-        dockerfile: ./Dockerfile
+        context: .
+        dockerfile: ./api/Dockerfile
       environment:
-        DB_HOST: "db"
+        PGHOST: db
+        PGUSER: admin
+        PGPASSWORD: admin
+        PGDATABASE: budget  
       depends_on: 
+        - "db"
+        - "migration"
+      links: 
         - "db"
       ports:
         - 3000:3000
+      volumes:
+        - ./api/src:/home/apiuser/api/src
+      # command: ["./wait-for-db.sh", "db", "npm", "run", "start:dev"]
+    migration: 
+      build: 
+        context: .
+        dockerfile: ./api/Dockerfile
+      environment:
+        PGHOST: db
+        PGUSER: admin
+        PGPASSWORD: admin
+        PGDATABASE: budget  
+      depends_on: 
+        - "db" 
+      command: ["npm","run", "migrate", "up"]
     pgadmin:
       image: "dpage/pgadmin4:latest"
       # env_file:
