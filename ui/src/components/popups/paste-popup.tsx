@@ -36,27 +36,25 @@ export function PastePopup(props: Props) {
           setText('');
           props.onDataSaved(parsed);
         }
-        
+
       }
     }
   }
 
   useEffect(() => {
     function handlePaste(ev: ClipboardEvent) {
-      setOpen(true);
-
-      console.log("open", open);
       if (!ev.clipboardData) {
         return;
       }
 
       let text = ev.clipboardData.getData("text") as string;
 
-      if (parser === "YNCU") {
-        const clipboardParser = FILE_CLIPBOARD_PARSER[parser]
-        const parsed = clipboardParser.parse(text, 5);
-        setText(text);
-        setSample(parsed);
+      const clipboardParser = FILE_CLIPBOARD_PARSER[parser]
+      const parsed = clipboardParser.parse(text, 5);
+      setText(text);
+      setSample(parsed);
+      if (parsed.length > 0) {
+        setOpen(true);
       }
     }
 
@@ -65,7 +63,6 @@ export function PastePopup(props: Props) {
       document.removeEventListener("paste", handlePaste)
     }
   }, [open, parser, text]);
-
 
   return (
     <Grid container>
@@ -93,8 +90,8 @@ export function PastePopup(props: Props) {
 
           </Grid>
           <Grid container spacing={1} justify={"flex-end"} >
-            <Grid item xs={4} spacing={0}>
-              <FormControl style={{width: '100%'}}>
+            <Grid item xs={6} spacing={0}>
+              <FormControl style={{ width: '100%' }}>
                 <Button variant="contained" color="primary"
                   onClick={() => handleClose({}, "saveAndCloseClick")}>Save and Close</Button>
               </FormControl>
