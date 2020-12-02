@@ -19,6 +19,7 @@ services:
         - 3000:3000
       volumes:
         - ./api/src:/home/apiuser/api/src
+        - ./httpTypes:/home/apiuser/httpTypes
       # command: ["./wait-for-db.sh", "db", "npm", "run", "start:dev"]
     migration: 
       build: 
