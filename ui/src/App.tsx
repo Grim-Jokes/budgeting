@@ -10,27 +10,29 @@ import { Dashboard } from './components/pages/dashboard';
 
 function App() {
   return (
-    <Grid container spacing={0} style={{height: '100%'}}>
-      <Grid item xs={1}>
-        <NavList />
-      </Grid>
-      <Grid item xs={11}>
-        <RequestProvider>
-          <Router>
-            <Switch>
-              <Route path="/dashboard">
-                <Dashboard />
-              </Route>
-              <Route path="/merchants">
-                <Merchants />
-              </Route>
-              <Route path={["/", "/transactions"]}>
-                <Transactions />
-              </Route>
-            </Switch>
-          </Router>
-        </RequestProvider>
-      </Grid>
+    <Grid container spacing={0} style={{ height: '100%' }}>
+      <NavList />
+      <div className="content">
+        <div className="pages">
+          <div className="page-content">
+            <RequestProvider>
+              <Router>
+                <Switch>
+                  <Route path="/dashboard">
+                    <Dashboard />
+                  </Route>
+                  <Route path="/merchants">
+                    <Merchants />
+                  </Route>
+                  <Route path={["/", "/transactions"]}>
+                    <Transactions />
+                  </Route>
+                </Switch>
+              </Router>
+            </RequestProvider>
+          </div>
+        </div>
+      </div>
     </Grid>
 
   );

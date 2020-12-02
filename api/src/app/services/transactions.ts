@@ -21,7 +21,7 @@ export class TransactionService {
             year = Number.parseInt(filterOptions.year);
         }
 
-        let month = today.getFullYear();
+        let month = 1; // Default to januar if month is not set
         if (filterOptions.month) {
             month = Number.parseInt(filterOptions.month);
         }
@@ -30,6 +30,8 @@ export class TransactionService {
         if (filterOptions.since) {
             since = filterOptions.since.toLowerCase() === 'true'
         }
+
+        console.log('Y-M', year, month, since);
 
         return this.transactionRepo.list({ year, month, since })
 

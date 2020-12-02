@@ -27,8 +27,8 @@ export class Request {
         return new Request(connectionParams);
     }
 
-    public get<R>(segment: URISegment): Promise<R> {
-        const url = this.getUrl(segment);
+    public get<R>(segment: URISegment, queryParams?: { [index: string]: string | number | boolean | void }): Promise<R> {
+        const url = this.getUrl(segment, queryParams);
         return fetch(url, {
             headers: {
                 'Accept': 'application/json',
@@ -49,11 +49,21 @@ export class Request {
         }).then((result) => result.json())
     }
 
-    private getUrl(segment: URISegment) {
+    private getUrl(segment: URISegment, queryParams?: { [index: string]: string | number | boolean | void }) {
         let url = this.urls.get(segment);
         if (url == null) {
             url = `${this.url}/${segment}`;
             this.urls.set(segment, url);
+        }
+
+        let queryFields: string[] = [];
+        if (queryParams) {
+            const fields = Object.keys(queryParams);
+            queryFields = fields.filter((field) => queryParams[field] != null).map((field) => `${field}=${queryParams[field]}`);
+        }
+
+        if (queryFields.length > 0) {
+            url = url + '?' + queryFields.join('&')
         }
 
         return url;

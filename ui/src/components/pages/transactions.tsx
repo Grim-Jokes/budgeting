@@ -5,16 +5,22 @@ import { usePostTransactions } from '../../hooks/post-transactions';
 import { PastePopup } from '../popups/paste-popup';
 import { TransactionList } from '../transaction-list';
 
+import "react-datepicker/dist/react-datepicker.css";
+import DatePicker from 'react-datepicker';
+import { Checkbox, FormControlLabel, FormGroup } from '@material-ui/core';
+
 export function Transactions() {
     let [transactions, setTransactions] = useState<ListTransactionsResponse[] | CreateTransactionResponse[]>([]);
+    let [date, setDate] = useState<Date>(new Date());
     let [update, setUpdate] = useState(true);
+    let [since, setSince] = useState<boolean>(true);
 
-    let trans = useGetTransactions();
+    let trans = useGetTransactions(date, since);
 
     const [addedTrans, post, cleanup] = usePostTransactions();
 
     useEffect(() => {
-        if (trans !== transactions && transactions.length === 0) {
+        if (trans.length !== transactions.length) {
             setTransactions(trans);
         }
         else if (addedTrans.transactions.length > 0) {
@@ -26,13 +32,26 @@ export function Transactions() {
 
     return (
         <>
-            <div className="content">
-                <PastePopup onDataSaved={(data) => {
-                    post(data);
-                    console.log("onDataSaved update", update);
-                    setUpdate(true);
-                }} />
-                <TransactionList transactions={transactions} />
-            </div>
+            <FormGroup row>
+                <FormControlLabel
+                    control={<>
+                        <DatePicker
+                            selected={date}
+                            onChange={(date: Date) => setDate(date)}
+                            dateFormat="MM/yyyy"
+                            showMonthYearPicker
+                        />
+                        <Checkbox checked={since} onChange={() => setSince(!since)} name="since" />
+                    </>}
+                    label="Since"
+                    labelPlacement="start"
+                />
+            </FormGroup>
+            <PastePopup onDataSaved={(data) => {
+                post(data);
+                console.log("onDataSaved update", update);
+                setUpdate(true);
+            }} />
+            <TransactionList transactions={transactions} />
         </>);
 }

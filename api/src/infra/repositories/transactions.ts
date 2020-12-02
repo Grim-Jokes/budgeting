@@ -56,6 +56,7 @@ export class Transactions extends Repository<TransactionDTO> implements Transact
 
     async list(filterBy: FilterTransactionsBy): Promise<Transaction[]> {
         const operator = filterBy.since == true ? '>=' : '=';
+        console.log("operator", operator)
 
         const listResults = await this.listModels(`SELECT id, "merchantId", amount, date
         FROM 
