@@ -13,3 +13,13 @@ export interface CreateTransactionRequestExistingMerchant {
 }
 
 export type CreateTransactionRequest = CreateTransactionRequestNewMerchant | CreateTransactionRequestExistingMerchant;
+
+export interface ListTransactionsQuery {
+    year?: string;
+    month?: string;
+    merchant?: {
+        name: string,
+        searchType?: string
+    };
+    since?: "true" | "false";
+}

@@ -1,11 +1,18 @@
 import { IDisposable } from "@src/infra/cleanup";
 import { Transaction, Merchant } from "../entities";
 
+export interface FilterTransactionsBy {
+    month: number,
+    year: number;
+    since?: boolean;
+}
+
 export interface TransactionRepository extends IDisposable {
     save(transaction: Transaction): Promise<Transaction>;
     update(transaction: Transaction): Promise<Transaction>;
-    list(): Promise<Transaction[]>;
+    list(FilterBy: FilterTransactionsBy): Promise<Transaction[]>;
 }
+
 
 export interface MerchantsRepository extends IDisposable {
     list(): Promise<Merchant[]>;

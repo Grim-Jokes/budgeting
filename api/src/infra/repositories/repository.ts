@@ -24,9 +24,10 @@ export class Repository<R = { id: number }> implements IDisposable {
         return result.rows[0].id;
     }
 
-    protected async listModels(query: string): Promise<QueryResult<R>> {
+    protected async listModels(query: string, values?: (string | number)[]): Promise<QueryResult<R>> {
         let q = await this.client.query<R>({
-            text: query
+            text: query,
+            values
         });
 
         return q;

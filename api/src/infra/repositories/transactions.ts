@@ -1,7 +1,7 @@
 import 'module-alias/register'
 import { PoolClient } from "pg";
 
-import { MerchantsRepository, TransactionRepository } from "../../models/repositories";
+import { MerchantsRepository, TransactionRepository, FilterTransactionsBy } from "../../models/repositories";
 import { Transaction, Merchant } from "@src/models/entities/transaction";
 
 import { TransactionDate, Amount } from "@src/models/value-objects";
@@ -54,9 +54,16 @@ export class Transactions extends Repository<TransactionDTO> implements Transact
         return newTransaction;
     }
 
-    async list(): Promise<Transaction[]> {
+    async list(filterBy: FilterTransactionsBy): Promise<Transaction[]> {
+        const operator = filterBy.since == true ? '>=' : '=';
+
         const listResults = await this.listModels(`SELECT id, "merchantId", amount, date
-        FROM public.transaction;`);
+        FROM 
+            public.transaction 
+        WHERE
+            TO_CHAR(date, 'YYYY-MM') ${operator} $1::text
+            
+        ;`, [`${filterBy.year}-${filterBy.month}`]);
         const transformedResults: Transaction[] = [];
 
 

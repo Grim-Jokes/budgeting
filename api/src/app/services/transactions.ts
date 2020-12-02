@@ -1,9 +1,7 @@
-import { Request } from 'express';
-
 import { Transaction, Merchant } from "@src/models/entities";
 import { MerchantsRepository, TransactionRepository } from "@src/models/repositories";
 import { Amount, MerchantName, TransactionDate } from '@src/models/value-objects';
-import { CreateTransactionRequest } from 'httptypes';
+import { CreateTransactionRequest, ListTransactionsQuery } from 'httptypes';
 
 export interface InsertStatus {
     [index: string]: Error
@@ -14,6 +12,28 @@ export class TransactionService {
         private transactionRepo: TransactionRepository,
         private merchantRepo: MerchantsRepository,
     ) { }
+
+    public async viewTransactions(filterOptions: ListTransactionsQuery) {
+
+        let today = new Date();
+        let year = today.getFullYear();
+        if (filterOptions.year) {
+            year = Number.parseInt(filterOptions.year);
+        }
+
+        let month = today.getFullYear();
+        if (filterOptions.month) {
+            month = Number.parseInt(filterOptions.month);
+        }
+
+        let since = true;
+        if (filterOptions.since) {
+            since = filterOptions.since.toLowerCase() === 'true'
+        }
+
+        return this.transactionRepo.list({ year, month, since })
+
+    }
 
     public async saveTransaction(data: CreateTransactionRequest): Promise<Transaction> {
         const merchant: Merchant = await this.handleMerchant(data);
@@ -66,9 +86,5 @@ export class TransactionService {
             throw new Error("Merchant is not set")
         }
         return merchant;
-    }
-
-    public async viewTransactions(_req: Request) {
-        return this.transactionRepo.list()
     }
 }
