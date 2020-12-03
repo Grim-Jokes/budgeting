@@ -8,14 +8,13 @@ import { TransactionList } from '../transaction-list';
 import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from 'react-datepicker';
 import { Checkbox, FormControlLabel, FormGroup } from '@material-ui/core';
+import styles from './transactions.module.css';
 
 export function Transactions() {
     let [transactions, setTransactions] = useState<ListTransactionsResponse[] | CreateTransactionResponse[]>([]);
     let [date, setDate] = useState<Date>(new Date());
     let [update, setUpdate] = useState(true);
-    let [since, setSince] = useState<boolean>(true);
-
-    let trans = useGetTransactions(date, since);
+    let trans = useGetTransactions(date);
 
     const [addedTrans, post, cleanup] = usePostTransactions();
 
@@ -29,7 +28,6 @@ export function Transactions() {
         }
     }, [transactions, addedTrans, cleanup, trans]);
 
-
     return (
         <>
             <FormGroup row>
@@ -41,9 +39,8 @@ export function Transactions() {
                             dateFormat="MM/yyyy"
                             showMonthYearPicker
                         />
-                        <Checkbox checked={since} onChange={() => setSince(!since)} name="since" />
                     </>}
-                    label="Since"
+                    label="Date"
                     labelPlacement="start"
                 />
             </FormGroup>
@@ -52,6 +49,8 @@ export function Transactions() {
                 console.log("onDataSaved update", update);
                 setUpdate(true);
             }} />
-            <TransactionList transactions={transactions} />
+            <div className={styles.transactionsContainer}>
+                <TransactionList transactions={transactions} />
+            </div>
         </>);
 }

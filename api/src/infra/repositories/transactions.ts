@@ -55,18 +55,23 @@ export class Transactions extends Repository<TransactionDTO> implements Transact
     }
 
     async list(filterBy: FilterTransactionsBy): Promise<Transaction[]> {
-        const operator = filterBy.since == true ? '>=' : '=';
-        console.log("operator", operator)
+
+        let dateFormat = 'YYYY-MM';
+        let param = `${filterBy.year}-${filterBy.month}`;
+
+        if (!filterBy.month) {
+            dateFormat = 'YYYY';
+            param = `${filterBy.year}`
+        }
 
         const listResults = await this.listModels(`SELECT id, "merchantId", amount, date
         FROM 
             public.transaction 
         WHERE
-            TO_CHAR(date, 'YYYY-MM') ${operator} $1::text
+            TO_CHAR(date, '${dateFormat}') = $1::text
             
-        ;`, [`${filterBy.year}-${filterBy.month}`]);
+        ;`, [param]);
         const transformedResults: Transaction[] = [];
-
 
         for (let i = 0; i < listResults.rowCount; i++) {
             const r = listResults.rows[i];

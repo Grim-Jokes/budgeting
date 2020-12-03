@@ -9,7 +9,7 @@ import { Col, TransactionHeader } from './transaction-list-header';
 import style from './transaction-list.module.css';
 import { ParsedTransaction } from '../../services/parsers';
 
-const columns: Col[] = ["#", 'merchant', 'amount', 'date'];
+const columns: Col[] = ["#", 'category', 'merchant', 'amount', 'date'];
 
 interface Transaction {
     id?: string | number,
@@ -48,6 +48,8 @@ function transactionToTableCell(item: Transaction | PastedData, index: number) {
                         } else {
                             return <TableCell>{item['transactionDate']}</TableCell>
                         }
+                    case 'category':
+                        return <TableCell></TableCell>
                     default:
                         return <TableCell>{item[col]}</TableCell>
                 }

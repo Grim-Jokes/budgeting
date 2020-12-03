@@ -3,7 +3,7 @@ import { useContext, useEffect, useState } from 'react';
 import { ListTransactionsResponse } from 'httptypes';
 import { RequestContext } from '../components/providers/request';
 
-export function useGetTransactions(date?: Date, since?: boolean) {
+export function useGetTransactions(date?: Date) {
     let request = useContext(RequestContext);
 
     let year: number | void;
@@ -21,8 +21,8 @@ export function useGetTransactions(date?: Date, since?: boolean) {
             setTransactions(value);
         }
 
-        request.get<ListTransactionsResponse[]>('transactions', { year, month, since }).then(saveTransactions);
-    }, [request, year, month, since]);
+        request.get<ListTransactionsResponse[]>(`transactions/${year}/${month}`).then(saveTransactions);
+    }, [request, year, month]);
 
     return transactions;
 }

@@ -16,7 +16,7 @@ export async function ListTransactions(req: Request, res: Response, next: NextFu
       await Merchants.getRepo(),
     );
 
-    const data: Transaction[] = await service.viewTransactions(req.query);
+    let data: Transaction[] = await service.viewTransactions(req.params);
 
     res.status(200);
     res.send(

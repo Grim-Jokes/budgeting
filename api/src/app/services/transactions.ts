@@ -1,7 +1,7 @@
 import { Transaction, Merchant } from "@src/models/entities";
 import { MerchantsRepository, TransactionRepository } from "@src/models/repositories";
 import { Amount, MerchantName, TransactionDate } from '@src/models/value-objects';
-import { CreateTransactionRequest, ListTransactionsQuery } from 'httptypes';
+import { CreateTransactionRequest, ListTransactionUrlParam } from 'httptypes';
 
 export interface InsertStatus {
     [index: string]: Error
@@ -13,7 +13,7 @@ export class TransactionService {
         private merchantRepo: MerchantsRepository,
     ) { }
 
-    public async viewTransactions(filterOptions: ListTransactionsQuery) {
+    public async viewTransactions(filterOptions: ListTransactionUrlParam) {
 
         let today = new Date();
         let year = today.getFullYear();
@@ -21,19 +21,12 @@ export class TransactionService {
             year = Number.parseInt(filterOptions.year);
         }
 
-        let month = 1; // Default to januar if month is not set
+        let month: number | void;
         if (filterOptions.month) {
             month = Number.parseInt(filterOptions.month);
         }
 
-        let since = true;
-        if (filterOptions.since) {
-            since = filterOptions.since.toLowerCase() === 'true'
-        }
-
-        console.log('Y-M', year, month, since);
-
-        return this.transactionRepo.list({ year, month, since })
+        return this.transactionRepo.list({ year, month })
 
     }
 

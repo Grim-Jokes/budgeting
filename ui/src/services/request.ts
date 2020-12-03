@@ -3,7 +3,7 @@ interface ConnectionParams {
     apiPort: string
 }
 
-export type URISegment = 'transactions';
+export type URISegment = 'transactions' | string;
 export type URL = string;
 
 

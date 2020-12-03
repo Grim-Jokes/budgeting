@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { List, ListItem, ListItemIcon } from '@material-ui/core';
+import { Box, List, ListItem, ListItemIcon } from '@material-ui/core';
 import ReceiptIcon from '@material-ui/icons/Receipt';
 import StorefrontIcon from '@material-ui/icons/Storefront';
 import DashboardSharpIcon from '@material-ui/icons/DashboardSharp';
@@ -11,11 +11,11 @@ interface LinkProps {
 
 function ListItemLink(props: LinkProps) {
     return <ListItem button component="a" {...props} />;
-  }
+}
 
 export function NavList() {
     return (
-        <div className="nav">
+        <Box className="nav">
             <List>
                 <ListItemLink href="/dashboard">
                     <ListItemIcon>
@@ -33,5 +33,6 @@ export function NavList() {
                     </ListItemIcon>
                 </ListItemLink>
             </List>
-        </div>);
+        </Box>
+    );
 }

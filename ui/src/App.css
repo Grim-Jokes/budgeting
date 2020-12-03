@@ -1,9 +1,9 @@
 body {
   font-size: 10pt;
+  background: rgba(0, 0, 0, 0.13);
 }
 
 #root {
-  background: rgba(0, 0, 0, 0.13);
 }
 
 @keyframes App-logo-spin {
@@ -18,29 +18,26 @@ body {
 .nav {
   width: 50px;
   height: 100%;
-  box-shadow: 5px 0px 10px RGBA(0,0,0,0.1);
   background: white;
+  box-shadow: 5px 0px 10px RGBA(0,0,0,0.1);
 }
+
 .nav > ul {
   margin: auto;
 }
 
-.content {
-  width: calc(100% - 50px);
-  display: inline-block;
-  height: 100%;
-}
 .pages {
-  margin: 15px 15px 0 15px;
+  box-shadow: 0px 5px 10px RGBA(0,0,0,0.1);
+}
+
+.pages {
   background: white;
-  box-shadow: 5px 0px 10px RGBA(0,0,0,0.1);
-  height: calc(100% - 55px);
-  overflow: hidden;
+  height: 100%;
 }
 
 .page-content {
   margin: 15px;
-  height: 100%;
+  height: calc(100% - 45px);
 }
 
 .income { 

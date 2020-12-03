@@ -2,9 +2,8 @@ import { IDisposable } from "@src/infra/cleanup";
 import { Transaction, Merchant } from "../entities";
 
 export interface FilterTransactionsBy {
-    month: number,
+    month: number | void,
     year: number;
-    since?: boolean;
 }
 
 export interface TransactionRepository extends IDisposable {
