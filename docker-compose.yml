@@ -1,0 +1,61 @@
+version: "3.3"
+
+services:
+    api:
+      build: 
+        context: .
+        dockerfile: ./api/Dockerfile
+      environment:
+        PGHOST: db
+        PGUSER: admin
+        PGPASSWORD: admin
+        PGDATABASE: budget  
+      depends_on: 
+        - "db"
+        - "migration"
+      links: 
+        - "db"
+      ports:
+        - 3000:3000
+      volumes:
+        - ./api/src:/home/apiuser/api/src
+        - ./httpTypes:/home/apiuser/httpTypes
+    migration: 
+      build: 
+        context: .
+        dockerfile: ./api/Dockerfile
+      environment:
+        PGHOST: db
+        PGUSER: admin
+        PGPASSWORD: admin
+        PGDATABASE: budget  
+      depends_on: 
+        - "db" 
+      command: ["npm","run", "migrate", "up"]
+    pgadmin:
+      image: "dpage/pgadmin4:latest"
+      # env_file:
+      environment: 
+        PGADMIN_DEFAULT_EMAIL: admin@email.com
+        PGADMIN_DEFAULT_PASSWORD: admin@email.com
+      depends_on: 
+        - "db"
+      ports: 
+        - 5050:80
+      volumes:
+        - pgadmin-data:/var/lib/pgadmin
+        - ./pgadmin/servers.json:/pgadmin4/servers.json
+    db:
+      image: postgres:latest
+      env_file:
+        - ./db/.env
+      ports: 
+        - 5432:5432
+      expose:
+        - 5432
+      volumes:
+        - db-data:/var/lib/postgres/data
+volumes:
+  pgadmin-data:
+  db-data:
+          
