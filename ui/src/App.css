@@ -1,0 +1,20 @@
+body {
+  font-size: 10pt;
+}
+
+.pages {
+  height: 100%;
+}
+
+.page-content {
+  margin: 15px;
+  height: calc(100% - 45px);
+}
+
+.income { 
+  color: #30A000;
+}
+
+.expense {
+  color: #A03000;
+}

@@ -1,0 +1,7 @@
+.default#root {
+  background: rgba(0, 0, 0, 0.13);
+}
+
+.default .pages {
+  background: white;
+}
