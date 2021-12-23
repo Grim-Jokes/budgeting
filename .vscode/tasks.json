@@ -23,6 +23,15 @@
             "problemMatcher": [],
             "label": "npm: build - api",
             "detail": "tsc -p ."
+        },
+        {
+            "type": "npm",
+            "script": "build",
+            "path": "scraping/",
+            "group": "build",
+            "problemMatcher": [],
+            "label": "npm: build - scraping",
+            "detail": "tsc -p ."
         }
     ]
 }
