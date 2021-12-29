@@ -1,0 +1,26 @@
+{
+  "name": "scraping",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc -p .",
+    "prebuild": "rimraf ./dist",
+    "start": "node ./dist/index.js",
+    "decode": "node ./dist/decode.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "pg": "^8.7.1",
+    "pupeteer": "0.0.1",
+    "puppeteer": "^13.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.0",
+    "@types/pg": "^8.6.3",
+    "@types/puppeteer": "^5.4.4",
+    "typescript": "^4.5.4"
+  }
+}
