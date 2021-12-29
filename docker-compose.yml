@@ -1,4 +1,4 @@
-version: "3.3"
+version: "3.9"
 
 services:
     api:
@@ -32,6 +32,9 @@ services:
       depends_on: 
         - "db" 
       command: ["npm","run", "migrate", "up"]
+      volumes: 
+        - ./encryption/secrets.bin:/home/apiuser/encryption/secrets.bin
+        - ./encryption/creds.bin:/home/apiuser/encryption/creds.bin
     pgadmin:
       image: "dpage/pgadmin4:latest"
       # env_file:
