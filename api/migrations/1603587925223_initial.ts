@@ -1,8 +1,10 @@
-/* eslint-disable camelcase */
+/* eslint-disable @typescript-eslint/camelcase */
+import { MigrationBuilder, ColumnDefinitions } from 'node-pg-migrate';
 
+export const shorthands: ColumnDefinitions | undefined = undefined;
 exports.shorthands = undefined;
 
-exports.up = pgm => {
+exports.up = (pgm: MigrationBuilder) => {
     pgm.createTable("merchant", {
         id: 'id',
         name: { type: 'varchar(1000)', notNull: true, unique: true }
@@ -12,8 +14,19 @@ exports.up = pgm => {
         id: 'id',
         merchantId: { type: "int", references: "merchant" },
         amount: { type: 'decimal(100, 2)' },
-        date: { type: "date" }
-    }); 
+        date: { type: "date" },
+    });
+
+    pgm.createConstraint("transaction", "unique_transactions",
+        {
+            unique: [
+                [
+                    "merchantId",
+                    "amount",
+                    "date"
+                ]
+            ]
+        });
 
     pgm.createTable("category", {
         id: 'id',
@@ -22,7 +35,7 @@ exports.up = pgm => {
     });
 };
 
-exports.down = pgm => {
+exports.down = (pgm: MigrationBuilder) => {
     pgm.dropTable("transaction", { ifExists: true });
     pgm.dropTable("merchant", { ifExists: true });
     pgm.dropTable("category", { ifExists: true });
