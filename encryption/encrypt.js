@@ -7,8 +7,6 @@ function encrypt(cipher, value) {
 module.exports = {
   encryptFactory: (algorithm, secret, initVector) => {
     const cipher = crypto.createCipheriv(algorithm, secret, initVector);
-    return (value) => {
-      return encrypt(cipher, value)
-    }
+    return (value) => encrypt(cipher, value);
   }
 }

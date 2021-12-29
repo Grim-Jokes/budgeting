@@ -6,7 +6,7 @@ function decrypt(cipher, value) {
 
 module.exports = {
   decryptFactory: (algorithm, secret, initVector) => {
-    const cipher = crypto.createCipheriv(algorithm, secret, initVector);
+    const cipher = crypto.createDecipheriv(algorithm, secret, initVector);
     return (value) => decrypt(cipher, value)
   }
 }
