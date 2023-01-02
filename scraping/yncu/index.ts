@@ -11,15 +11,15 @@ import { Client } from "pg";
 
 export default async function scrapeYncuStatements(page: Page, db: Client) {
   try {
-    // await goToLogin(page);
-    // await login(page,
-    //   {
-    //     getLoginCreds: () => getLoginCred(db),
-    //     getSecQuestions: () => getSecuirityQuestions(db)
-    //   }
-    // );
-    // await goToAccount(page);
-    // await downloadCsv(page);
+    await goToLogin(page);
+    await login(page,
+      {
+        getLoginCreds: () => getLoginCred(db),
+        getSecQuestions: () => getSecuirityQuestions(db)
+      }
+    );
+    await goToAccount(page);
+    await downloadCsv(page);
     await persistTransactions(createSaveTransactionsFn(db));
   } catch (err) {
     console.error(err);

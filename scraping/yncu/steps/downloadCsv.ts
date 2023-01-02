@@ -2,35 +2,24 @@ import { Page } from "puppeteer";
 import waitForLoad from "./utils/waitForLoad";
 
 async function selectDateRange(page: Page) {
-  const [dateRangeRadio] = await page.$$('input.checkbox.eventEnabledFields2');
-
-  return dateRangeRadio.click();
+  return page.select("#stype", "reverse_csv")
 }
 
 async function setStartDate(page: Page) {
-  const [startDateInput] = await page.$$('#StartDateValue');
-
-  await startDateInput.click({ clickCount: 3 });
-
-  const year = new Date().getFullYear();
-  return startDateInput.type(`01/01/${year}`);
+  return page.select("#RadioTimeTypeValue", "this-year")
 }
 
-async function setCsvFromOldestDate(page: Page) {
-  const [advancedOptions] = await page.$$('.showHideSwitch11.icon');
 
-  await advancedOptions.click();
-
-  return page.select("#stype", "reverse_csv");
-}
-
-async function clickGetActicities(page: Page) {
+async function clickGetActivities(page: Page) {
   const [getActivitiesButton] = await page.$$("#getAccountActivity");
 
   return getActivitiesButton.click();
 }
 
 async function clickActualDownloadButton(page: Page) {
+  if (process.env.DEBUG) {
+    await page.screenshot({ path: "continue.png" })
+  }
   const [downloadButton] = await page.$$("#Continue");
 
   page.on('load', () => console.log("loaded"));
@@ -58,11 +47,17 @@ export default async function downloadCsv(page: Page) {
 
   await setStartDate(page);
 
-  await setCsvFromOldestDate(page);  
+  if (process.env.DEBUG) {
+    await page.screenshot({ path: "after-start.png" })
+  }
 
-  await clickGetActicities(page);
+  await clickGetActivities(page);
 
   await waitForLoad(page);
+
+  if (process.env.DEBUG) {
+    await page.screenshot({ path: "getActivities.png" })
+  }
 
   await page.client().send('Page.setDownloadBehavior', { behavior: 'allow', downloadPath: './' });
 
