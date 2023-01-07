@@ -1,4 +1,4 @@
-import { PoolClient, QueryResult } from "pg";
+import { PoolClient, QueryResult, QueryResultRow } from "pg";
 
 import { connect } from "../postgress";
 import { addDisposable, IDisposable } from "../cleanup";
@@ -9,7 +9,7 @@ type Value = string | number | null;
 type Values = Value[];
 
 /// Base class that handles connecting to the pg database.
-export class Repository<R = { id: number }> implements IDisposable {
+export class Repository<R extends QueryResultRow> implements IDisposable {
 
     protected constructor(protected client: PoolClient) { }
 

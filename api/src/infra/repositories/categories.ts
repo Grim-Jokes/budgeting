@@ -13,6 +13,13 @@ interface CategoryDTO {
   name: string;
 }
 
+function toCategory(row: CategoryDTO) {
+  return new Category({
+    id: row.id,
+    name: new CategoryName(row.name)
+  })
+}
+
 
 export class Categories extends Repository<CategoryDTO> implements CategoriesRepository {
 
@@ -64,7 +71,7 @@ export class Categories extends Repository<CategoryDTO> implements CategoriesRep
     WHERE 
       "categoryId" = $1::integer`;
 
-    if (filterBy && filterBy.parentCategory && filterBy.parentCategory.id != null) {
+    if (filterBy?.parentCategory?.id != null) {
       categoryId = filterBy.parentCategory.id
     } else {
       query = `${query} OR "categoryId" IS NULL`
@@ -72,16 +79,7 @@ export class Categories extends Repository<CategoryDTO> implements CategoriesRep
 
     const listResults = await this.listModels(query, [categoryId]);
 
-    const transformedResults: Category[] = [];
+    return listResults.rows.map(toCategory)
 
-    for (let i = 0; i < listResults.rowCount; i++) {
-      const result = listResults.rows[i];
-      transformedResults.push(new Category({
-        id: result.id,
-        name: new CategoryName(result.name),
-      }));
-    }
-
-    return transformedResults;
   }
 }
