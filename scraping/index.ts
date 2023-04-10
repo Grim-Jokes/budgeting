@@ -21,7 +21,7 @@ import getDb from "./db";
   try {
     await scrapeYncuStatements(page, db);
   } finally {
-    await closeDb(),
-      browser.close();
+    await closeDb();
+    browser.close();
   }
 })();
