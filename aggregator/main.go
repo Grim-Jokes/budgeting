@@ -24,9 +24,17 @@ func main() {
 	},
 	)
 
-	for key, value := range result.TotalsPerMerchant {
-		fmt.Printf("%s: %.2f\n", key, value)
+	fmt.Println("Merchant, Amount,  PCT of Income, PCT of Expenses")
+
+	for merchant, totalPerMerchant := range result.TotalsPerMerchant {
+		if merchant != "Income" {
+			fmt.Printf("%s, %.2f,  %.2f%%,%.2f%%\n",
+				merchant,
+				totalPerMerchant,
+				float64(totalPerMerchant)/float64(result.TotalDeposits)*100,
+				float64(totalPerMerchant)/float64(result.TotalWithdrawals)*100)
+		}
 	}
 
-	fmt.Printf("Total: %.2f", result.Total)
+	fmt.Printf("Remainderm, %.2f\n", result.Total)
 }

@@ -15,7 +15,7 @@ func ParseRecord(record []string) *parsing.RecordResult {
 	}
 
 	return &parsing.RecordResult{
-		Merchant:         merchants.SanitizeMerchanName(merchant),
+		Merchant:         merchants.SanitizeMerchanName(merchant, sanitizerFns),
 		DepositAmount:    0.0,
 		WithdrawalAmount: amount * -1,
 	}

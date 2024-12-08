@@ -9,7 +9,7 @@ import (
 func ParseRecord(record []string) *parsing.RecordResult {
 	merchant, withdrawalAmount, depositAmount := merchants.Merchant(record[2]), money.ToMoney(record[4]), money.ToMoney(record[5])
 
-	merchant = merchants.SanitizeMerchanName(merchant)
+	merchant = merchants.SanitizeMerchanName(merchant, sanitizers)
 
 	// Skip mastercard becasuse we want the actual transactions
 	if merchant == "Mastercard" {
