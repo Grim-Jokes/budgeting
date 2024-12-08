@@ -11,3 +11,4 @@ func (m Merchant) Contains(value string) bool {
 }
 
 type Merchant string
+type MerchantName string
