@@ -1,9 +1,7 @@
 package main
 
 import (
-	"aggregator/mastercard"
 	"aggregator/parsing"
-	"aggregator/yncu"
 	"fmt"
 )
 
@@ -14,11 +12,11 @@ func main() {
 	result := parsing.ParseFile([]parsing.ParseParams{
 		{
 			FileName: "yncu/data.csv",
-			Parser:   yncu.ParseRecord,
+			Parser:   parsing.ParseYncuRecord,
 		},
 		{
 			FileName:    "mastercard/data.csv",
-			Parser:      mastercard.ParseRecord,
+			Parser:      parsing.ParseMastercardRecord,
 			SkipLineNum: &skipMcLine,
 		},
 	},

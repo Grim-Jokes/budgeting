@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-var sanitizers = []merchants.SanitizerFn{
+var Sanitizers = []merchants.SanitizerFn{
 	handleETransfer,
 	merchants.CreateSanitizer(`Withdrawal Transfer to \*\d+ MTG`, "Mortgage - YNCU"),
 	merchants.CreateSanitizer(`Deposit MD Tfr from \*5229    SAV`, "Emergency Savings"),

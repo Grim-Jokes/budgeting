@@ -1,6 +1,7 @@
 package parsing
 
 import (
+	"aggregator/categories"
 	"aggregator/merchants"
 	"aggregator/money"
 	"encoding/csv"
@@ -19,13 +20,12 @@ type ParseResult struct {
 	TotalDeposits     money.Money
 	TotalWithdrawals  money.Money
 	TotalsPerMerchant TotalsPerMerchant
+	TotalsPerCategory totalsPerCategory
 }
 
 type ParserFn = func([]string) *RecordResult
 
 type TotalsPerMerchant map[merchants.Merchant]money.Money
-
-var totalsPerMerchant TotalsPerMerchant = make(TotalsPerMerchant)
 
 type ParseParams struct {
 	FileName    string
@@ -33,10 +33,14 @@ type ParseParams struct {
 	SkipLineNum *int
 }
 
+type totalsPerCategory = map[categories.Category]money.Money
+
 func ParseFile(params []ParseParams) ParseResult {
 	total := money.Money(0.0)
 	totalDeposits := money.Money(0.0)
 	totalWithdrawals := money.Money(0.0)
+	totalsPerMerchant := make(TotalsPerMerchant)
+	totalsPerCategory := make(totalsPerCategory)
 
 	for _, param := range params {
 
@@ -80,6 +84,12 @@ func ParseFile(params []ParseParams) ParseResult {
 
 			totalsPerMerchant[result.Merchant] += result.DepositAmount
 			totalsPerMerchant[result.Merchant] -= result.WithdrawalAmount
+
+			category, _ := result.Merchant.GetCategories()
+
+			totalsPerCategory[category] += result.DepositAmount
+			totalsPerCategory[category] -= result.WithdrawalAmount
+
 		}
 	}
 
@@ -88,5 +98,6 @@ func ParseFile(params []ParseParams) ParseResult {
 		TotalDeposits:     totalDeposits,
 		TotalWithdrawals:  totalWithdrawals,
 		TotalsPerMerchant: totalsPerMerchant,
+		TotalsPerCategory: totalsPerCategory,
 	}
 }
