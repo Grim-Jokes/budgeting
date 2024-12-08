@@ -1,20 +1,32 @@
 package main
 
 import (
+	"aggregator/mastercard"
+	"aggregator/parsing"
 	"aggregator/yncu"
 	"fmt"
 )
 
 func main() {
-	result := yncu.ParseData()
+
+	skipMcLine := 0
+
+	result := parsing.ParseFile([]parsing.ParseParams{
+		{
+			FileName: "yncu/data.csv",
+			Parser:   yncu.ParseRecord,
+		},
+		{
+			FileName:    "mastercard/data.csv",
+			Parser:      mastercard.ParseRecord,
+			SkipLineNum: &skipMcLine,
+		},
+	},
+	)
 
 	for key, value := range result.TotalsPerMerchant {
-		if key != "Income" {
-			fmt.Printf("Merchant: %s, Total: %.2f (%.2f)%%\n", key, value, value/result.TotalExpenses)
-		} else {
-			fmt.Printf("Merchant: %s, Total: %.2f\n", key, value)
-		}
+		fmt.Printf("%s: %.2f\n", key, value)
 	}
 
-	fmt.Printf("Total: %.2f - %.2f = %.2f\n", result.TotalIncome, result.TotalExpenses, result.Total)
+	fmt.Printf("Total: %.2f", result.Total)
 }
