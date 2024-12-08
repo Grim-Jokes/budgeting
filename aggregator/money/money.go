@@ -22,3 +22,7 @@ func ToMoney(from string) Money {
 
 	return Money(value)
 }
+
+func (m Money) ToString() string {
+	return strconv.FormatFloat(float64(m), 'f', 2, 64)
+}

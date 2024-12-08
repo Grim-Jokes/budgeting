@@ -9,21 +9,14 @@ import (
 	"os"
 )
 
-type RecordResult struct {
-	Merchant         merchants.Merchant
-	DepositAmount    money.Money
-	WithdrawalAmount money.Money
-}
-
 type ParseResult struct {
+	Records           []*RecordResult
 	Total             money.Money
 	TotalDeposits     money.Money
 	TotalWithdrawals  money.Money
 	TotalsPerMerchant TotalsPerMerchant
 	TotalsPerCategory totalsPerCategory
 }
-
-type ParserFn = func([]string) *RecordResult
 
 type TotalsPerMerchant map[merchants.Merchant]money.Money
 
@@ -41,6 +34,7 @@ func ParseFile(params []ParseParams) ParseResult {
 	totalWithdrawals := money.Money(0.0)
 	totalsPerMerchant := make(TotalsPerMerchant)
 	totalsPerCategory := make(totalsPerCategory)
+	records := []*RecordResult{}
 
 	for _, param := range params {
 
@@ -76,6 +70,8 @@ func ParseFile(params []ParseParams) ParseResult {
 				continue
 			}
 
+			records = append(records, result)
+
 			total += result.DepositAmount
 			total -= result.WithdrawalAmount
 
@@ -85,7 +81,7 @@ func ParseFile(params []ParseParams) ParseResult {
 			totalsPerMerchant[result.Merchant] += result.DepositAmount
 			totalsPerMerchant[result.Merchant] -= result.WithdrawalAmount
 
-			category, _ := result.Merchant.GetCategories()
+			category, _ := result.Categorize()
 
 			totalsPerCategory[category] += result.DepositAmount
 			totalsPerCategory[category] -= result.WithdrawalAmount
@@ -94,6 +90,7 @@ func ParseFile(params []ParseParams) ParseResult {
 	}
 
 	return ParseResult{
+		Records:           records,
 		Total:             total,
 		TotalDeposits:     totalDeposits,
 		TotalWithdrawals:  totalWithdrawals,
