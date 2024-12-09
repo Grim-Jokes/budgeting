@@ -23,7 +23,6 @@ func SanitizeMerchanName(name Merchant, sanitizerFns []SanitizerFn) Merchant {
 }
 
 func CreateSanitizer(filter string, result Merchant) func(Merchant) Merchant {
-
 	return func(name Merchant) Merchant {
 		if name.Contains(filter) {
 			return result

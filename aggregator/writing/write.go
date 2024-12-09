@@ -10,14 +10,14 @@ import (
 func SaveRecords(result parsing.ParseResult) {
 	fileName := "data.csv"
 
-	file, err := os.OpenFile(fileName, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	file, err := os.OpenFile(fileName, os.O_CREATE|os.O_WRONLY, 0644)
 
 	if err != nil {
 		log.Fatalf("Failed to open file %v", err)
 	}
 	defer file.Close()
 
-	if _, err := file.WriteString("Merchant, Deposit, Withdrawal, Category\n"); err != nil {
+	if _, err := file.WriteString("Date, Merchant, Deposit, Withdrawal, Category, Sub-Category\n"); err != nil {
 		log.Fatalf("Failed to write header to file %v", err)
 	}
 
@@ -25,17 +25,40 @@ func SaveRecords(result parsing.ParseResult) {
 	defer writer.Flush()
 
 	for _, record := range result.Records {
-		category, _ := record.Categorize()
+		category, subCategory := record.Categorize()
 
 		row := []string{
+			record.Date.Format("2006-01-02"),
 			string(record.Merchant),
 			record.DepositAmount.ToString(),
 			record.WithdrawalAmount.ToString(),
 			string(category),
+			string(subCategory),
 		}
 
 		writer.Write(row)
 
 	}
+
+	writer.Write([]string{})
+	writer.Write([]string{
+		"",
+		"",
+		result.TotalDeposits.ToString(),
+	})
+
+	writer.Write([]string{
+		"",
+		"",
+		"",
+		result.TotalWithdrawals.ToString(),
+	})
+
+	writer.Write([]string{
+		"",
+		"",
+		"",
+		result.Total.ToString(),
+	})
 
 }

@@ -4,6 +4,7 @@ import (
 	"aggregator/categories"
 	"aggregator/merchants"
 	"aggregator/money"
+	"time"
 )
 
 type ParserFn = func([]string) *RecordResult
@@ -12,22 +13,28 @@ type RecordResult struct {
 	Merchant         merchants.Merchant
 	DepositAmount    money.Money
 	WithdrawalAmount money.Money
+	Date             time.Time
 }
 
 func (r *RecordResult) Categorize() (categories.Category, categories.SubCategory) {
 
-	val, ok := merchantCategories[r.Merchant]
+	category, ok := merchantCategories[r.Merchant]
+	subCategory, ok1 := merchantSubCategories[r.Merchant]
 
 	if !ok {
 		return categories.Other, ""
 	}
 
-	return val, ""
+	if ok && !ok1 {
+		return category, ""
+	}
+
+	return category, categories.SubCategory(subCategory)
 }
 
 var merchantCategories = MerchantCategoryMap{
-	merchants.AAndW:                categories.Other,
-	merchants.Amazon:               categories.Other,
+	merchants.AAndW:                categories.Everyday,
+	merchants.Amazon:               categories.Entertainment,
 	merchants.Accountant:           categories.Other,
 	merchants.Angels:               categories.Other,
 	merchants.AnimalHospital:       categories.Other,
@@ -77,7 +84,7 @@ var merchantCategories = MerchantCategoryMap{
 	merchants.HumanSociety:         categories.Other,
 	merchants.IceCream:             categories.Other,
 	merchants.Ikea:                 categories.Other,
-	merchants.Interest:             categories.Other,
+	merchants.Interest:             categories.Debt,
 	merchants.InterestAdjustment:   categories.Other,
 	merchants.IshAndChips:          categories.Other,
 	merchants.Jagex:                categories.Other,
@@ -139,5 +146,9 @@ var merchantCategories = MerchantCategoryMap{
 	merchants.Zehrs:                categories.Everyday,
 }
 
+var merchantSubCategories = MerchantSubCategoryMap{
+	merchants.AAndW: categories.Restaurants,
+}
+
 type MerchantCategoryMap = map[merchants.Merchant]categories.Category
-type MerchantSubCategoryMap = map[merchants.Merchant]categories.Category
+type MerchantSubCategoryMap = map[merchants.Merchant]categories.SubCategory
