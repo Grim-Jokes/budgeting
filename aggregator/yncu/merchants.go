@@ -35,7 +35,7 @@ var Sanitizers = []merchants.SanitizerFn{
 	merchants.CreateSanitizer(`Electronic Deposit Tax       Refunds CANADA`, merchants.Taxes),
 	merchants.CreateSanitizer(`Descriptive Withdrawal       Online Pmt To Canada Revenue Agency`, merchants.Taxes),
 	merchants.CreateSanitizer(`Non-sufficient Funds Fee`, merchants.BankFee),
-	merchants.CreateSanitizer(`Electronic Deposit           Miscellaneous Payments CSI`, merchants.Savings),
+	merchants.CreateSanitizer(`Electronic Deposit           Miscellaneous Payments CSI`, merchants.SavingsWithdrawal),
 	merchants.CreateSanitizer(`Electronic Withdrawal        Miscellaneous Payments       GOCARDLESS 0006HFN3B8EH`, merchants.Misc),
 	merchants.CreateSanitizer(`Bill Payment to Qtrade`, merchants.InvestmentsAndTFSA),
 }

@@ -20,6 +20,22 @@ const (
 	Travel           Category = "Travel"
 	Utilities        Category = "Utilities"
 	Other            Category = "Other"
+	Savings          Category = "Savings"
+)
+
+const (
+	Income Category = "Income"
+)
+
+// Income
+const (
+	Pay         SubCategory = "Pay"
+	OtherIncome SubCategory = "Other Income"
+)
+
+// Savings
+const (
+	Investments SubCategory = "Investments"
 )
 
 // Children
@@ -34,7 +50,7 @@ const (
 	ChildrenOther SubCategory = "Children Other"
 )
 
-// EveryDay ()
+// EveryDay
 const (
 	Groceries        SubCategory = "Groceries"
 	Restaurants      SubCategory = "Restaurants"
@@ -54,29 +70,95 @@ const (
 	DebtOther   SubCategory = "Debt Other"
 )
 
-type SubCategoryToCategoryMap = map[SubCategory][]Category
+// Home
+const (
+	Mortgage      SubCategory = "Rent/mortgage"
+	PropertyTaxes SubCategory = "Property taxes"
+	Furnishings   SubCategory = "Furnishings"
+	LawnAndGarden SubCategory = "Lawn/garden"
+	HomeSupplies  SubCategory = "Home Supplies"
+	Maintenance   SubCategory = "Maintenance"
+	Improvements  SubCategory = "Improvements"
+	Moving        SubCategory = "Moving"
+	HomeOther     SubCategory = "Home Other"
+)
 
-var ParentCategories = map[SubCategory]Category{
-	Activities:    Children,
-	Allowance:     Children,
-	Medical:       Children,
-	Childcare:     Children,
-	Clothing:      Children,
-	School:        Children,
-	Toys:          Children,
-	ChildrenOther: Children,
+// Transportation
+const (
+	Fuel                   SubCategory = "Fuel"
+	CarPayments            SubCategory = "Car payments"
+	Repairs                SubCategory = "Repairs"
+	License                SubCategory = "Registration/license"
+	TransportationSupplies SubCategory = "Transportation Supplies"
+	PublicTransit          SubCategory = "Public transit"
+	TransportationOther    SubCategory = "Transportation Other"
+)
 
-	Groceries:        Everyday,
-	Restaurants:      Everyday,
-	PersonalSupplies: Everyday,
-	Clothes:          Everyday,
-	Laundry:          Everyday,
-	HairAndbeauty:    Everyday,
-	Subscriptions:    Everyday,
-	EveryDayOther:    Everyday,
+// Insurance
+const (
+	Car            SubCategory = "Car"
+	Health         SubCategory = "Health"
+	HomeInsurance  SubCategory = "Home"
+	Life           SubCategory = "Life"
+	OtherInsurance SubCategory = "Other"
+)
 
-	CreditCards: Debt,
-	Loands:      Debt,
-	Taxes:       Debt,
-	DebtOther:   Debt,
-}
+// Utilities
+const (
+	Phone          SubCategory = "Phone"
+	TVUtility      SubCategory = "TV"
+	Internet       SubCategory = "Internet"
+	Electricity    SubCategory = "Electricity"
+	HeatAndWater   SubCategory = "Heat/Water"
+	Trash          SubCategory = "Trash"
+	OtherUtilities SubCategory = "OtherUtilities"
+)
+
+// Health/medical
+const (
+	DoctorsDentalVision SubCategory = "Doctor/Dental/Vision"
+	SpecialtyCare       SubCategory = "Specialist"
+	Pharmacy            SubCategory = "Pharmacy"
+	Emergency           SubCategory = "Emergency"
+	OtherMedical        SubCategory = "Other Medical"
+)
+
+// Entertainment
+const (
+	Books              SubCategory = "Books"
+	ConcertsOrShows    SubCategory = "Concerts/shows"
+	Games              SubCategory = "Games"
+	Hobbies            SubCategory = "Hobbies"
+	Movies             SubCategory = "Movies"
+	Music              SubCategory = "Music"
+	OutdoorActivities  SubCategory = "Outdoor activities"
+	Photography        SubCategory = "Photography"
+	Sports             SubCategory = "Sports"
+	TheaterPlays       SubCategory = "Theater/plays"
+	TV                 SubCategory = "TV"
+	OtherEntertainment SubCategory = "Other Entertainment"
+)
+
+// Pets
+const (
+	Food     SubCategory = "Food"
+	Vet      SubCategory = "Vet/medical"
+	PetToys  SubCategory = "Toys"
+	Supplies SubCategory = "Supplies"
+	PetOther SubCategory = "Other"
+)
+
+// Technology
+
+const (
+	DomainsAndHosting SubCategory = "Domains & hosting"
+	OnlineServices    SubCategory = "Online services"
+	Hardware          SubCategory = "Hardware"
+	Software          SubCategory = "Software"
+	OtherTech         SubCategory = "Other Tech"
+)
+
+// Other
+const (
+	BankFees SubCategory = "Bank Fees"
+)

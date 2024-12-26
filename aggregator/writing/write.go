@@ -5,12 +5,13 @@ import (
 	"encoding/csv"
 	"log"
 	"os"
+	"strconv"
 )
 
 func SaveRecords(result parsing.ParseResult) {
 	fileName := "data.csv"
 
-	file, err := os.OpenFile(fileName, os.O_CREATE|os.O_WRONLY, 0644)
+	file, err := os.OpenFile(fileName, os.O_CREATE|os.O_TRUNC|os.O_WRONLY, 0644)
 
 	if err != nil {
 		log.Fatalf("Failed to open file %v", err)
@@ -37,6 +38,35 @@ func SaveRecords(result parsing.ParseResult) {
 		}
 
 		writer.Write(row)
+
+	}
+
+	writer.Write([]string{})
+
+	for category, total := range result.TotalsPerCategory {
+
+		writer.Write([]string{
+			string(category),
+			strconv.FormatFloat(float64(total*-1), 'f', 2, 64),
+			strconv.FormatFloat(((float64(total))/float64(result.TotalDeposits))*100, 'f', 2, 64) + "%",
+		})
+
+		for childCat, _ := range result.TotalsPerSubCategory[category] {
+
+			months := result.TotalsPerSubCategoryPerMonth[category][childCat]
+			row := []string{string(childCat)}
+			for _, val := range months {
+				row = append(row, strconv.FormatFloat(float64(val*-1), 'f', 2, 64))
+			}
+
+			// row = append(row, strconv.FormatFloat(float64(childTotal), 'f', 2, 64),
+			// 	strconv.FormatFloat((float64(childTotal)/float64(total))*100, 'f', 2, 64)+"%")
+
+			writer.Write(row)
+
+		}
+
+		writer.Write([]string{})
 
 	}
 

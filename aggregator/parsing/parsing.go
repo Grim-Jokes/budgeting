@@ -10,12 +10,14 @@ import (
 )
 
 type ParseResult struct {
-	Records           []*RecordResult
-	Total             money.Money
-	TotalDeposits     money.Money
-	TotalWithdrawals  money.Money
-	TotalsPerMerchant TotalsPerMerchant
-	TotalsPerCategory totalsPerCategory
+	Records                      []*RecordResult
+	Total                        money.Money
+	TotalDeposits                money.Money
+	TotalWithdrawals             money.Money
+	TotalsPerMerchant            TotalsPerMerchant
+	TotalsPerCategory            totalsPerCategory
+	TotalsPerSubCategory         totalsPerSubCategory
+	TotalsPerSubCategoryPerMonth totalsPerSubCategoryPerMonth
 }
 
 type TotalsPerMerchant map[merchants.Merchant]money.Money
@@ -27,6 +29,8 @@ type ParseParams struct {
 }
 
 type totalsPerCategory = map[categories.Category]money.Money
+type totalsPerSubCategory = map[categories.Category]map[categories.SubCategory]money.Money
+type totalsPerSubCategoryPerMonth = map[categories.Category]map[categories.SubCategory][12]money.Money
 
 func ParseFile(params []ParseParams) ParseResult {
 	total := money.Money(0.0)
@@ -34,6 +38,8 @@ func ParseFile(params []ParseParams) ParseResult {
 	totalWithdrawals := money.Money(0.0)
 	totalsPerMerchant := make(TotalsPerMerchant)
 	totalsPerCategory := make(totalsPerCategory)
+	totalsPerSubCategory := make(totalsPerSubCategory)
+	totalsPerMonth := make(totalsPerSubCategoryPerMonth)
 	records := []*RecordResult{}
 
 	for _, param := range params {
@@ -81,20 +87,40 @@ func ParseFile(params []ParseParams) ParseResult {
 			totalsPerMerchant[result.Merchant] += result.DepositAmount
 			totalsPerMerchant[result.Merchant] -= result.WithdrawalAmount
 
-			category, _ := result.Categorize()
+			category, subCategory := result.Categorize()
 
 			totalsPerCategory[category] += result.DepositAmount
 			totalsPerCategory[category] -= result.WithdrawalAmount
+
+			_, exists := totalsPerSubCategory[category]
+
+			if !exists {
+				totalsPerSubCategory[category] = make(map[categories.SubCategory]money.Money)
+				totalsPerMonth[category] = make(map[categories.SubCategory][12]money.Money)
+			}
+
+			totalsPerSubCategory[category][subCategory] += result.DepositAmount
+			totalsPerSubCategory[category][subCategory] -= result.WithdrawalAmount
+
+			m := totalsPerMonth[category][subCategory]
+			monthIndex := result.Date.Month() - 1
+
+			m[monthIndex] += result.DepositAmount
+			m[monthIndex] -= result.WithdrawalAmount
+
+			totalsPerMonth[category][subCategory] = m
 
 		}
 	}
 
 	return ParseResult{
-		Records:           records,
-		Total:             total,
-		TotalDeposits:     totalDeposits,
-		TotalWithdrawals:  totalWithdrawals,
-		TotalsPerMerchant: totalsPerMerchant,
-		TotalsPerCategory: totalsPerCategory,
+		Records:                      records,
+		Total:                        total,
+		TotalDeposits:                totalDeposits,
+		TotalWithdrawals:             totalWithdrawals,
+		TotalsPerMerchant:            totalsPerMerchant,
+		TotalsPerCategory:            totalsPerCategory,
+		TotalsPerSubCategory:         totalsPerSubCategory,
+		TotalsPerSubCategoryPerMonth: totalsPerMonth,
 	}
 }
