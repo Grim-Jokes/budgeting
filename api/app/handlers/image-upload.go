@@ -2,30 +2,27 @@ package handlers
 
 import (
 	"api/infra/ocr"
-	"encoding/base64"
 	"net/http"
+	"os"
 
 	"github.com/gin-gonic/gin"
 )
 
-type ImageRequest struct {
-	Image string `json:"image"` // Base64-encoded image
-}
-
 func HandleImageUpload(c *gin.Context) {
-
-	var req ImageRequest
-
-	// Bind JSON input to struct
-	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid JSON payload"})
+	file, err := c.FormFile("image")
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Failed to retrieve the file"})
 		return
 	}
 
-	// Decode Base64 image data
-	imageData, err := base64.StdEncoding.DecodeString(req.Image)
+	if err := c.SaveUploadedFile(file, "uploaded_image.jpg"); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save file"})
+	}
+
+	// Open the saved file and read its bytes
+	imageData, err := os.ReadFile("uploaded_image.jpg")
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid Base64 image data"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to read the saved file"})
 		return
 	}
 
