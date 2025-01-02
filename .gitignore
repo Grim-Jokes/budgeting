@@ -25,3 +25,6 @@ go.work.sum
 .env
 
 data*.csv
+
+__debug_bin*
+uploaded_image*

@@ -3,17 +3,15 @@ package main
 import (
 	"os"
 
+	"api/app/handlers"
+
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
 	r := gin.Default()
 
-	r.GET("/", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "Hello",
-		})
-	})
+	r.POST("/upload", handlers.HandleImageUpload)
 
 	port, exists := os.LookupEnv("PORT")
 
